@@ -62,6 +62,7 @@ proxyAll = (src, target, proxyFn) ->
       return if skipProps[key]
       return if Object::[key]? # Ignore any rewrites of toString, etc which can cause problems
       propertyDescriptor = Object.getOwnPropertyDescriptor(src, key)
+      return if typeof src is 'function' and key is 'caller' # caller can not be redefined
       return if propertyDescriptor.get? # getter methods can have unintentional side effects when called in the wrong context
       return unless typeof src[key] is 'function' # getter methods may throw an exception in some contexts
 
